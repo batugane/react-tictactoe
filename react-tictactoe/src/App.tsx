@@ -1,11 +1,6 @@
 import "./App.css";
 
-function App() {
-  return (
-    <>
-      <p>Hello World</p>
-    </>
-  );
+function Square() {
+  return <button className="square">X</button>;
 }
-
-export default App;
+export default Square;
