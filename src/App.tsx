@@ -1,48 +1,34 @@
-import { useState } from "react";
-import { calculateWinner } from "./utils/calculateWinner";
+import { useState } from 'react'
+import { calculateWinner } from './utils/calculateWinner'
 
-function Square({
-  value,
-  onSquareClick,
-}: {
-  value: string;
-  onSquareClick: () => void;
-}) {
+function Square({ value, onSquareClick }: { value: string; onSquareClick: () => void }) {
   return (
     <button className="square" onClick={onSquareClick}>
       {value}
     </button>
-  );
+  )
 }
 
-function Board({
-  xIsNext,
-  squares,
-  onPlay,
-}: {
-  xIsNext: boolean;
-  squares: string[];
-  onPlay: (nextSquares: string[]) => void;
-}) {
+function Board({ xIsNext, squares, onPlay }: { xIsNext: boolean; squares: string[]; onPlay: (nextSquares: string[]) => void }) {
   function handleClick(i: number) {
     if (calculateWinner(squares) || squares[i]) {
-      return;
+      return
     }
-    const nextSquares = squares.slice();
+    const nextSquares = squares.slice()
     if (xIsNext) {
-      nextSquares[i] = "X";
+      nextSquares[i] = 'X'
     } else {
-      nextSquares[i] = "O";
+      nextSquares[i] = 'O'
     }
-    onPlay(nextSquares);
+    onPlay(nextSquares)
   }
 
-  const winner = calculateWinner(squares);
-  let status;
+  const winner = calculateWinner(squares)
+  let status
   if (winner) {
-    status = "Winner: " + winner;
+    status = 'Winner: ' + winner
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O')
   }
 
   return (
@@ -64,38 +50,45 @@ function Board({
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </>
-  );
+  )
 }
 
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+  const [history, setHistory] = useState([Array(9).fill(null)])
+  const [currentMove, setCurrentMove] = useState(0)
+  const xIsNext = currentMove % 2 === 0
+  const currentSquares = history[currentMove]
 
   function handlePlay(nextSquares: string[]) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
+    const nextHistory = history.slice(0, currentMove + 1).concat([nextSquares])
+    setHistory(nextHistory)
+    setCurrentMove(nextHistory.length - 1)
   }
 
   function jumpTo(nextMove: number) {
-    setCurrentMove(nextMove);
+    setCurrentMove(nextMove)
   }
 
-  const moves = history.map((_squares, move) => {
-    let description;
-    if (move > 0) {
-      description = "Go to move #" + move;
-    } else {
-      description = "Go to game start";
-    }
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
-    );
-  });
+  function resetGame() {
+    setHistory([Array(9).fill(null)])
+    setCurrentMove(0)
+  }
+  const winner = calculateWinner(currentSquares)
+  const isGameOver = winner || currentSquares.every((square) => square !== null)
+  console.log(currentSquares)
+  // const moves = history.map((_squares, move) => {
+  //   let description
+  //   if (move > 0) {
+  //     description = 'Go to move #' + move
+  //   } else {
+  //     description = 'Go to game start'
+  //   }
+  //   return (
+  //     <li key={move}>
+  //       <button onClick={() => jumpTo(move)}>{description}</button>
+  //     </li>
+  //   )
+  // })
 
   return (
     <div className="game">
@@ -103,8 +96,14 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <button onClick={() => jumpTo(Math.max(currentMove - 1, 0))} disabled={currentMove === 0}>
+          Previous Turn
+        </button>
+        <button onClick={() => jumpTo(Math.min(currentMove + 1, history.length - 1))} disabled={currentMove === history.length - 1}>
+          Next Turn
+        </button>
+        {isGameOver && <button onClick={resetGame}>Replay</button>}
       </div>
     </div>
-  );
+  )
 }
