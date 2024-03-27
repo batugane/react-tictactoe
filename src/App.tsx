@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { calculateWinner } from './utils/calculateWinner'
 
 function Square({ value, onSquareClick }: { value: string; onSquareClick: () => void }) {
+  const squareClass = `square ${value ? value.toLowerCase() : ''}`
   return (
-    <button className="square" onClick={onSquareClick}>
-      {value}
+    <button className={squareClass} onClick={onSquareClick}>
+      {value || ''}
     </button>
   )
 }
@@ -30,10 +31,10 @@ function Board({ xIsNext, squares, onPlay }: { xIsNext: boolean; squares: string
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O')
   }
-
+  const statusClass = winner ? 'status winner' : xIsNext ? 'status x-player' : 'status o-player'
   return (
     <>
-      <div className="status">{status}</div>
+      <div className={statusClass}>{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -75,20 +76,6 @@ export default function Game() {
   }
   const winner = calculateWinner(currentSquares)
   const isGameOver = winner || currentSquares.every((square) => square !== null)
-  console.log(currentSquares)
-  // const moves = history.map((_squares, move) => {
-  //   let description
-  //   if (move > 0) {
-  //     description = 'Go to move #' + move
-  //   } else {
-  //     description = 'Go to game start'
-  //   }
-  //   return (
-  //     <li key={move}>
-  //       <button onClick={() => jumpTo(move)}>{description}</button>
-  //     </li>
-  //   )
-  // })
 
   return (
     <div className="game">
@@ -99,10 +86,18 @@ export default function Game() {
         <button onClick={() => jumpTo(Math.max(currentMove - 1, 0))} disabled={currentMove === 0}>
           Previous Turn
         </button>
-        <button onClick={() => jumpTo(Math.min(currentMove + 1, history.length - 1))} disabled={currentMove === history.length - 1}>
+        <button
+          className="nextTurn"
+          onClick={() => jumpTo(Math.min(currentMove + 1, history.length - 1))}
+          disabled={currentMove === history.length - 1}
+        >
           Next Turn
         </button>
-        {isGameOver && <button onClick={resetGame}>Replay</button>}
+        {isGameOver && (
+          <button className="replay" onClick={resetGame}>
+            Replay
+          </button>
+        )}
       </div>
     </div>
   )

@@ -3,7 +3,7 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #333;
   color: #fff;
   margin: 20px;
@@ -64,22 +64,55 @@ button {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 1em;
   margin: 4px 2px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s;
   transition: transform 0.1s;
+  box-shadow: 0 4px #999;
 }
 
 button:hover {
   background-color: #ad2121;
+  box-shadow: 0 5px #666;
+  transform: translateY(2px);
 }
 button:disabled {
   background-color: #666;
   cursor: not-allowed;
 }
+
+button.nextTurn {
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 4px #999;
+}
+
+button.nextTurn:hover {
+  background-color: #45a049;
+  box-shadow: 0 5px #666;
+  transform: translateY(2px);
+}
+
+.status {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.status.x-player {
+  color: #ff5722;
+}
+
+.status.o-player {
+  color: #03a9f4;
+}
+
 @media (max-width: 600px) {
   .square {
     width: 80px;
@@ -87,4 +120,26 @@ button:disabled {
     line-height: 80px;
     font-size: 40px;
   }
+  .game-board {
+    width: 90%;
+  }
+}
+button.replay {
+  background-color: #444;
+  color: white;
+  box-shadow: 0 4px #999;
+}
+
+button.replay:hover {
+  background-color: #555;
+  box-shadow: 0 5px #666;
+  transform: translateY(2px);
+}
+
+.square.x {
+  color: #ff5722;
+}
+
+.square.o {
+  color: #03a9f4;
 }
